@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN/en" xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="icon" type="image/x-icon" th:href="@{/icon/my.ico}" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link th:href="@{/admin/assets/Widget/icheck/icheck.css}" rel="stylesheet" type="text/css"/>
+
+    <link th:href="@{/admin/assets/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/admin/assets/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/assets/css/ace.min.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/assets/css/ace-rtl.min.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/assets/css/ace-skins.min.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/style.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/upload.css}">
+
+    <script th:src="@{/admin/js/jquery.min.js}"></script>
+    <script th:src="@{/admin/js/jQuery.upload.min.js}"></script>
+    <script th:src="@{/admin/assets/js/ace-extra.min.js}"></script>
+    <script th:src="@{/admin/assets/js/bootstrap.min.js}"></script>
+    <script th:src="@{/admin/assets/js/typeahead-bs2.min.js}"></script>
+    <script th:src="@{/admin/assets/js/ace-elements.min.js}"></script>
+    <script th:src="@{/admin/assets/js/ace.min.js}"></script>
+    <script th:src="@{/admin/assets/layer/layer.js}" type="text/javascript"></script>
+    <script th:src="@{/admin/assets/laydate/laydate.js}" type="text/javascript"></script>
+    <script th:src="@{/admin/assets/js/jquery.dataTables.min.js}"></script>
+    <script th:src="@{/admin/assets/js/jquery.dataTables.bootstrap.js}"></script>
+    <script type="text/javascript" th:src="@{/admin/js/H-ui.js}"></script>
+    <script type="text/javascript" th:src="@{/admin/js/H-ui.admin.js}"></script>
+    <script th:src="@{/admin/js/lrtk.js}" type="text/javascript"></script>
+    <script type="text/javascript" th:src="@{/admin/assets/Widget/ueditor/1.4.3/ueditor.config.js}"></script>
+    <script type="text/javascript" th:src="@{/admin/assets/Widget/ueditor/1.4.3/ueditor.all.min.js}"></script>
+    <script type="text/javascript" th:src="@{/admin/assets/Widget/ueditor/1.4.3/lang/zh-cn/zh-cn.js}"></script>
+    <script th:src="@{/js/change.js}"></script>
+
+
+    <title>产品管理</title>
+</head>
+<body>
+<div th:include="admin/index_top"></div>
+
+<div class="main-content" style="margin-bottom: 100px">
+    <!-- Infomation_header -->
+    <div class="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home home-icon"></i>
+                <a th:href="@{/admin/index}">首页</a>
+            </li>
+        </ul>
+    </div>
+    <div class=" page-content clearfix">
+        <div id="products_style">
+            <div class="border clearfix">
+                        <span class="l_f">
+                            <a href="#" onclick="add_product()" title="添加家具" class="btn btn-warning Order_form"><i
+                                    class="icon-plus"></i>添加家具</a>
+                        </span>
+                <span class="r_f">共：<b th:text="${productList.size()}"></b>件家具</span>
+            </div>
+            <!--产品列表展示-->
+            <div class="h_products_list clearfix" id="products_list">
+
+            </div>
+            <div class="table_menu_list" id="testIframe">
+                <table class="table table-striped table-bordered table-hover" id="sample-table">
+                    <thead>
+                    <tr>
+                        <th width="50px">编号</th>
+                        <th width="150px">名称</th>
+                        <th width="50px">父类</th>
+                        <th width="50px">子类</th>
+                        <th width="50px">木材</th>
+                        <th width="150px">加入时间</th>
+                        <th width="50px">访问量</th>
+                        <th width="50px">操作</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="product,item: ${productList}">
+                        <td th:text="${product.id}"></td>
+                        <td><u style="cursor:pointer" class="text-primary"
+                               th:onclick="'view_product('+${item.index}+')'"
+                               th:text="${product.prodName}"></u></td>
+                        <td th:text="${product.fatherName}"></td>
+                        <td th:text="${product.childName}"></td>
+                        <td th:text="${product.material}"></td>
+                        <td th:text="${product.uploadTime}"></td>
+                        <td th:text="${product.visitCount}"></td>
+                        <td class="td-manage">
+                            <a title="编辑" th:onclick="'update_product('+${item.index}+')'"
+                               href="javascript:;"
+                               class="btn btn-xs btn-info"><i class="icon-edit bigger-120"></i></a>
+                            <a title="删除" href="javascript:;" th:onclick="'member_del(this,'+${product.id}+')'"
+                               class="btn btn-xs btn-warning"><i class="icon-trash  bigger-120"></i></a>
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--家具详情-->
+<div id="productInfo" style="display:none">
+    <div class="content_style">
+        <div class="member_show">
+
+            <div class="member_content">
+                <ul>
+                    <li><label class="label_name">家具编号：</label>
+                        <span class="name" id="viewProdId"></span></li>
+                    <li><label class="label_name">家具名称：</label>
+                        <span class="name" id="viewProdName"></span></li>
+                    <li><label class="label_name">家具木材：</label>
+                        <span class="name" id="viewMaterial"></span></li>
+                    <li><label class="label_name">家具长度：</label>
+                        <span class="name" id="viewLength"></span></li>
+                    <li><label class="label_name">家具宽度：</label>
+                        <span class="name" id="viewWidth"></span></li>
+                    <li><label class="label_name">家具高度：</label>
+                        <span class="name" id="viewHeight"></span></li>
+                    <li><label class="label_name">父&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;类：</label>
+                        <span class="name" id="viewFatherName"></span></li>
+                    <li><label class="label_name">子&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;类：</label>
+                        <span class="name" id="viewChildName"></span></li>
+                    <li><label class="label_name">加入时间：</label>
+                        <span class="name" id="viewUploadTime"></span></li>
+                    <li><label class="label_name">访&nbsp;&nbsp;问&nbsp;&nbsp;量：</label>
+                        <span class="name" id="viewVisitCount"></span></li>
+                    <li><label class="label_name">家具描述：</label>
+                        <span class="name" id="viewDescribe"></span></li>
+
+                    <li><label class="label_name">家具图片：</label></li>
+
+                    <li>
+                        <img src="" id="viewImg1" style="height: 110px;margin: 10px">
+                        <img src="" id="viewImg2" style="height: 110px;margin: 10px">
+                        <img src="" id="viewImg3" style="height: 110px;margin: 10px">
+                        <img src="" id="viewImg4" style="height: 110px;margin: 10px">
+                        <img src="" id="viewImg5" style="height: 110px;margin: 10px">
+                        <img src="" id="viewImg6" style="height: 110px;margin: 10px">
+                        <img src="" id="viewImg7" style="height: 110px;margin: 10px">
+                        <img src="" id="viewImg8" style="height: 110px;margin: 10px">
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="product" style="display:none">
+    <div class="content_style">
+
+        <div class="clearfix" id="add_picture">
+            <form class="form form-horizontal" id="form-article-add">
+                <div class="clearfix cl">
+                    <label class="form-label col-2"><span class="c-red">*</span>家具名称：</label>
+                    <div class="formControls col-10">
+                        <input type="text" class="input-text" value="" placeholder="" id="prodName"
+                               name="prodName">
+                    </div>
+                </div>
+
+                <div class=" clearfix cl">
+                    <div class="Add_p_s">
+                        <label class="form-label col-2">木&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;材：</label>
+                        <div class="formControls col-2"><input type="text" class="input-text" value=""
+                                                               placeholder=""
+                                                               id="material" name="material"></div>
+                    </div>
+
+                    <div class="Add_p_s">
+                        <label class="form-label col-2">长&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：</label>
+                        <div class="formControls col-2"><input type="text" class="input-text" value=""
+                                                               placeholder=""
+                                                               id="length" name="length"></div>
+                    </div>
+
+                    <div class="Add_p_s">
+                        <label class="form-label col-2">宽&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：</label>
+                        <div class="formControls col-2"><input type="text" class="input-text" value=""
+                                                               placeholder=""
+                                                               id="width" name="width"></div>
+                    </div>
+
+                    <div class="Add_p_s">
+                        <label class="form-label col-2">高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;度：</label>
+                        <div class="formControls col-2"><input type="text" class="input-text" value=""
+                                                               placeholder=""
+                                                               id="height" name="height"></div>
+                    </div>
+
+                </div>
+
+                <div class=" clearfix cl">
+                    <div class="Add_p_s">
+                        <label class="form-label col-2">父&nbsp;&nbsp;类&nbsp;&nbsp;别：</label>
+                        <div class="formControls col-2">
+                                        <span class="select-box">
+                                            <select class="select" id="fatherSelect"
+                                                    onchange="getChildFromFather(this.value)">
+                                                <a th:each="navigationFather : ${navigationFatherList}">
+                                                    <option th:value="${navigationFather.id}"
+                                                            th:text="${navigationFather.naviName}"></option>
+                                                </a>
+                                            </select>
+                                        </span>
+                        </div>
+                    </div>
+
+                    <div class="Add_p_s">
+                        <label class="form-label col-2">子&nbsp;&nbsp;类&nbsp;&nbsp;别：</label>
+                        <div class="formControls col-2">
+                                        <span class="select-box">
+                                            <select class="select" id="childSelect">
+                                                <option>请选择子类</option>
+                                            </select>
+                                        </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="clearfix cl">
+                    <label class="form-label col-2">图片上传：</label>
+                </div>
+                <div class="case" style="margin-top: 15px;width:800px;margin-left: 10px" id="uploadDivImg">
+                </div>
+                <br>
+                <div class="clearfix cl">
+                    <label class="form-label col-2">详细内容：</label>
+                </div>
+                <div class="clearfix cl">
+                    <div class="formControls col-10">
+                        <script id="editor" type="text/plain"
+                                th:style="'width:100%;height:400px;'"></script>
+                    </div>
+                </div>
+
+                <div class="clearfix cl">
+                    <div class="Button_operation">
+                        <button onClick="checkProduct()" class="btn btn-primary radius"
+                                type="button">
+                            <i class="icon-save "></i>保存
+                        </button>
+                        <button onClick="layer_close();" class="btn btn-default radius" type="button"> 取消
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <input type="hidden" value="" id="prodId">
+            <input type="hidden" value="" id="uploadFileResult">
+        </div>
+    </div>
+</div>
+
+<!--footer-->
+<div class="footer_style" id="footerstyle">
+    <p class="l_f" th:text="${'版权所有&copy;'+company.compName +'&nbsp;&nbsp;&nbsp;&nbsp;'+company.batch}"></p>
+</div>
+<!--/footer-->
+
+<input type="hidden" th:value="${contextPath}" id="contextPath">
+<script>
+
+    $(document).ready(function () {
+//初始化宽度、高度
+        $(".widget-box").height($(window).height());
+        $(".page_right_style").height($(window).height());
+        $(".page_right_style").width($(window).width() - 220);
+
+    });
+
+
+</script>
+<script th:inline="javascript">
+    var ue = UE.getEditor('editor');
+
+    function checkProduct() {
+        let prodName = document.getElementById('prodName').value;
+        let material = document.getElementById('material').value;
+        let length = document.getElementById('length').value;
+        let width = document.getElementById('width').value;
+        let height = document.getElementById('height').value;
+        let fatherSelect = document.getElementById("fatherSelect").value;
+        let childSelect = document.getElementById("childSelect").value;
+        let describe = ue.getContent();
+        let prodId = document.getElementById("prodId").value;
+        let fileUploadList = $('#uploadFileResult').val()
+        if (prodName == null || prodName == "") {
+            alert("家具名称不能为空");
+        } else if (material == null || material == "") {
+            alert("木材不能为空");
+        } else if (length == null || length == "") {
+            alert("长度不能为空");
+        } else if (width == null || width == "") {
+            alert("宽度不能为空");
+        } else if (height == null || height == "") {
+            alert("高度不能为空");
+        } else if (fatherSelect == null || fatherSelect == "") {
+            alert("父类不能为空");
+        } else if (childSelect == null || childSelect == "") {
+            alert("子类不能为空");
+        } else if (describe == null || describe == "") {
+            alert("家具详情不能为空");
+        } else {
+            let contextPath = $('#contextPath').val()
+            if (!fileUploadList || fileUploadList.length < 2) {
+                fileUploadList = JSON.stringify([])
+            }
+            console.log(fileUploadList)
+            $.ajax({
+                url: contextPath + "/admin/addProduct",
+                type: "post",// 请求方式
+                async: false,
+                data: {
+                    "prodId": prodId,
+                    "prodName": prodName,
+                    "material": material,
+                    "length": length,
+                    "width": width,
+                    "height": height,
+                    "fatherSelect": fatherSelect,
+                    "childSelect": childSelect,
+                    "describe": describe,
+                    "fileUploadList": fileUploadList
+                },
+                dataType: "json",// 设置返回数据类型
+                success: function (sign) {
+                    if (sign.valueOf() == 1) {
+                        alert("添加成功");
+                        window.location.reload();
+                    } else {
+                        alert("添加失败");
+                    }
+                },
+                error: function (XMLHttpRequest, statusText) {
+                    console.log(XMLHttpRequest)
+                    alert("系统错误!")
+                }
+            })
+        }
+    }
+
+    /*添加*/
+    function add_product() {
+        $('#uploadFileResult').val(JSON.stringify([]))
+        document.getElementById("prodId").value = null;
+        var uploadDivImg = document.getElementById("uploadDivImg");
+        uploadDivImg.innerHTML = "";
+        let contextPath = $('#contextPath').val()
+        var div = document.createElement("div");
+        div.setAttribute('class', 'upload');
+        div.setAttribute('data-file', 'uploadImg');
+        div.setAttribute('data-type', 'png,jpg,jpeg,gif');
+        div.setAttribute('action', contextPath + '/admin/uploadProductImg');
+        div.setAttribute('data-num', '8');
+        div.setAttribute('id', 'uploadImg');
+        uploadDivImg.appendChild(div);
+
+        $(function () {
+            $("#uploadImg").upload();
+        })
+
+        document.getElementById("fatherSelect").value = "";
+        document.getElementById("childSelect").value = "";
+        document.getElementById('prodName').value = "";
+        document.getElementById('material').value = "";
+        document.getElementById('length').value = "";
+        document.getElementById('width').value = "";
+        document.getElementById('height').value = "";
+
+
+        var index = layer.open({
+            type: 1,
+            title: '添加家具',
+            maxmin: true,
+            shadeClose: false,
+            area: [(document.body.clientWidth * 0.9) + 'px', ''],
+            content: $('#product')
+        })
+
+    };
+
+
+    /*编辑*/
+    function update_product(count) {
+        $('#uploadFileResult').val(JSON.stringify([]))
+        var product = [[${productList}]][count];
+
+        document.getElementById("prodId").value = product.id;
+
+        var uploadDivImg = document.getElementById("uploadDivImg");
+        uploadDivImg.innerHTML = "";
+
+        let contextPath = $('#contextPath').val()
+        var address = [];
+        let addressHidden = [];
+        if (product.address1 != null) {
+            address.push(contextPath + product.addressMini1);
+            addressHidden.push(product.address1);
+        }
+        if (product.address2 != null) {
+            address.push(contextPath + product.addressMini2);
+            addressHidden.push(product.address2);
+        }
+        if (product.address3 != null) {
+            address.push(contextPath + product.addressMini3);
+            addressHidden.push(product.address3);
+        }
+        if (product.address4 != null) {
+            address.push(contextPath + product.addressMini4);
+            addressHidden.push(product.address4);
+        }
+        if (product.address5 != null) {
+            address.push(contextPath + product.addressMini5);
+            addressHidden.push(product.address5);
+        }
+        if (product.address6 != null) {
+            address.push(contextPath + product.addressMini6);
+            addressHidden.push(product.address6);
+        }
+        if (product.address7 != null) {
+            address.push(contextPath + product.addressMini7);
+            addressHidden.push(product.address7);
+        }
+        if (product.address8 != null) {
+            address.push(contextPath + product.addressMini8);
+            addressHidden.push(product.address8);
+        }
+
+        $('#uploadFileResult').val(JSON.stringify(addressHidden))
+
+        var div = document.createElement("div");
+        div.setAttribute('class', 'upload');
+        div.setAttribute('data-file', 'uploadImg');
+        div.setAttribute('data-type', 'png,jpg,jpeg,gif');
+        div.setAttribute('action', contextPath + '/admin/uploadProductImg');
+        div.setAttribute('data-num', '8');
+        div.setAttribute('data-value', address);
+        div.setAttribute('id', 'uploadImg');
+        uploadDivImg.appendChild(div);
+
+        $(function () {
+            $("#uploadImg").upload();
+        })
+
+
+        $.ajax({
+            url: contextPath + "/admin/productNaviChild",
+            type: "get",// 请求方式
+            async: false,
+            data: {
+                "fatherId": product.fatherId,
+            },
+            dataType: "json",// 设置返回数据类型
+            success: function (jsonArray) {
+                var childSelect = document.getElementById("childSelect");
+                childSelect.innerHTML = "";
+                for (var i = 0; i < jsonArray.length; i++) {
+                    var option = document.createElement("option");
+                    option.value = jsonArray[i].id;
+                    option.innerHTML = jsonArray[i].naviName;
+                    childSelect.appendChild(option);
+                }
+            },
+            error: function (XMLHttpRequest, statusText) {
+                alert("系统错误!")
+            }
+        })
+
+
+        document.getElementById("fatherSelect").value = product.fatherId;
+        document.getElementById("childSelect").value = product.childId;
+        document.getElementById('prodName').value = product.prodName;
+        document.getElementById('material').value = product.material;
+        document.getElementById('length').value = product.length;
+        document.getElementById('width').value = product.width;
+        document.getElementById('height').value = product.height;
+
+
+        ue.addListener("ready", function () {
+            ue.setContent(product.prodDescribe);
+        });
+
+        var index = layer.open({
+            type: 1,
+            title: '编辑家具',
+            maxmin: true,
+            shadeClose: false,
+            area: [(document.body.clientWidth * 0.9) + 'px', ''],
+            content: $('#product'),
+
+        })
+
+
+    };
+
+
+    /*查看*/
+    function view_product(count) {
+        document.getElementById('viewProdId').innerHTML = [[${productList}]][count].id;
+        document.getElementById('viewProdName').innerHTML = [[${productList}]][count].prodName;
+        document.getElementById('viewMaterial').innerHTML = [[${productList}]][count].material;
+        document.getElementById('viewLength').innerHTML = [[${productList}]][count].length;
+        document.getElementById('viewWidth').innerHTML = [[${productList}]][count].width;
+        document.getElementById('viewHeight').innerHTML = [[${productList}]][count].height;
+        document.getElementById('viewFatherName').innerHTML = [[${productList}]][count].fatherName;
+        document.getElementById('viewChildName').innerHTML = [[${productList}]][count].childName;
+        document.getElementById('viewUploadTime').innerHTML = [[${productList}]][count].uploadTime;
+        document.getElementById('viewVisitCount').innerHTML = [[${productList}]][count].visitCount;
+        document.getElementById('viewDescribe').innerHTML = [[${productList}]][count].prodDescribe;
+
+        let contextPath = $('#contextPath').val()
+        if ([[${productList}]][count].addressMini1 != null) {
+            document.getElementById('viewImg1').src = contextPath + [[${productList}]][count].addressMini1;
+        }
+        if ([[${productList}]][count].addressMini2 != null) {
+            document.getElementById('viewImg2').src = contextPath + [[${productList}]][count].addressMini2;
+        }
+        if ([[${productList}]][count].addressMini3 != null) {
+            document.getElementById('viewImg3').src = contextPath + [[${productList}]][count].addressMini3;
+        }
+        if ([[${productList}]][count].addressMini4 != null) {
+            document.getElementById('viewImg4').src = contextPath + [[${productList}]][count].addressMini4;
+        }
+        if ([[${productList}]][count].addressMini5 != null) {
+            document.getElementById('viewImg5').src = contextPath + [[${productList}]][count].addressMini5;
+        }
+        if ([[${productList}]][count].addressMini6 != null) {
+            document.getElementById('viewImg6').src = contextPath + [[${productList}]][count].addressMini6;
+        }
+        if ([[${productList}]][count].addressMini7 != null) {
+            document.getElementById('viewImg7').src = contextPath + [[${productList}]][count].addressMini7;
+        }
+        if ([[${productList}]][count].addressMini8 != null) {
+            document.getElementById('viewImg8').src = contextPath + [[${productList}]][count].addressMini8;
+        }
+
+
+        var index = layer.open({
+            type: 1,
+            title: '查看家具',
+            maxmin: true,
+            shadeClose: false,
+            area: [(document.body.clientWidth * 0.9) + 'px', ''],
+            content: $('#productInfo')
+        })
+    };
+
+    /*产品-删除*/
+    function member_del(obj, id) {
+        layer.confirm('确认要删除吗？', function (index) {
+            let contextPath = $('#contextPath').val()
+            $.ajax({
+                type: "get",// 请求方式
+                url: contextPath + "/admin/deleteProduct",
+                async: true,
+                data: {
+                    "prodId": id
+                },
+                dataType: "json",// 设置返回数据类型
+                success: function (sign) {
+                    if (sign.valueOf() == "1") {
+                        $(obj).parents("tr").remove();
+                        layer.msg('已删除!', {icon: 1, time: 1000});
+                        window.location.reload();
+                    } else {
+                        layer.msg('删除失败!', {icon: 2, time: 1000});
+                    }
+                },
+                error: function (XMLHttpRequest, statusText) {
+                    alert("系统异常!")
+                }
+            })
+        });
+    }
+
+    function layer_close() {
+        layer.closeAll();
+    }
+
+
+</script>
+<script th:inline="javascript">
+    jQuery(function ($) {
+        var oTable1 = $('#sample-table').dataTable({
+            "aaSorting": [
+                [0, "desc"]
+            ],//默认第几个排序
+            "bStateSave": true,//状态保存
+            "aoColumnDefs": [
+                //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+                {"orderable": false, "aTargets": [1, 7]}// 制定列不参与排序
+            ]
+        });
+
+        $('table th input:checkbox').on('click', function () {
+            var that = this;
+            $(this).closest('table').find('tr > td:first-child input:checkbox')
+                .each(function () {
+                    this.checked = that.checked;
+                    $(this).closest('tr').toggleClass('selected');
+                });
+
+        });
+
+
+        $('[data-rel="tooltip"]').tooltip({placement: tooltip_placement});
+
+        function tooltip_placement(context, source) {
+            var $source = $(source);
+            var $parent = $source.closest('table')
+            var off1 = $parent.offset();
+            var w1 = $parent.width();
+
+            var off2 = $source.offset();
+            var w2 = $source.width();
+
+            if (parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2)) return 'right';
+            return 'left';
+        }
+    });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>联系商家</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/icon/my.ico}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <link th:href="@{/css/mycss.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link th:href="@{/css/megamenu.css}" rel="stylesheet" type="text/css" media="all"/>
+
+    <script th:src="@{/js/bootstrap.js}"></script>
+    <script th:src="@{/js/jquery-1.11.1.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/simpleCart.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/change.js}" type="text/javascript"></script>
+    <script th:src="@{/js/megamenu.js}" type="text/javascript"></script>
+    <script th:src="@{/js/responsiveslides.min.js}" type="text/javascript"></script>
+    <script type="application/x-javascript">
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1000);
+            });
+        });
+    </script>
+
+    <script>$(document).ready(function () {
+        $(".megamenu").megamenu();
+    });</script>
+</head>
+
+<body>
+<div th:include="customer/index_top"></div>
+<!-- contact -->
+<div class="contact-bottom">
+    <iframe th:src="${company.gaode}"
+            frameborder="0" style="border:0" allowfullscreen>
+    </iframe>
+</div>
+<div class="contact">
+    <div class="container">
+        <div class="col-md-4 contact-left">
+
+            <h3>地址</h3>
+            <p th:text="${company.address1}"></p>
+            <p><span th:text="${company.address2 }"></span></p>
+            <ul>
+                <li>手机1:&emsp;<a th:utext="${company.phone1 }+'&emsp;('+${company.phone1User}+')'"></a></li>
+                <li>手机2:&emsp;<a th:utext="${company.phone2 }+'&emsp;('+${company.phone2User}+')'"></a></li>
+                <li>邮&nbsp;&nbsp;箱:&emsp;<a th:href="'mailto:'+${company.email }" th:utext="${company.email }"></a>
+                </li>
+            </ul>
+            </c:forEach>
+        </div>
+        <div class="col-md-8 contact-left">
+            <h3>联系我们</h3>
+            <font style="color:#adadad"><textarea id="messageInfo" name="messageInfo"></textarea></font>
+            <input type="submit" value="提交" onclick="IsOnloadContact()">
+
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<input type="hidden" th:value="${contextPath}" id="contextPath">
+<!-- //contact -->
+<div th:include="customer/footer"></div>
+</body>
+</html>

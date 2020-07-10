@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org"
+      xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="icon" type="image/x-icon" th:href="@{/icon/my.ico}" />
+    <meta charset="utf-8"/>
+    <title>总体访问量 </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link th:href="@{/admin/assets/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link rel="stylesheet" th:href="@{/admin/assets/css/font-awesome.min.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/assets/css/ace.min.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/assets/css/ace-rtl.min.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/assets/css/ace-skins.min.css}"/>
+    <link rel="stylesheet" th:href="@{/admin/css/style.css}"/>
+
+    <script th:src="@{/admin/assets/js/ace-extra.min.js}"></script>
+    <script th:src="@{/admin/js/jquery-1.9.1.min.js}"></script>
+    <script th:src="@{/admin/assets/js/bootstrap.min.js}"></script>
+    <script th:src="@{/admin/assets/js/typeahead-bs2.min.js}"></script>
+    <script th:src="@{/admin/assets/js/ace-elements.min.js}"></script>
+    <script th:src="@{/admin/assets/js/ace.min.js}"></script>
+    <script th:src="@{/admin/assets/layer/layer.js}" type="text/javascript"></script>
+    <script th:src="@{/admin/assets/laydate/laydate.js}" type="text/javascript"></script>
+
+    <script type="text/javascript" th:src="@{/admin/js/echarts/echarts.min.js}"></script>
+    <script type="text/javascript" th:src="@{/admin/js/echarts/echarts-gl.min.js}"></script>
+    <script type="text/javascript" th:src="@{/admin/js/echarts/ecStat.min.js}"></script>
+    <script type="text/javascript" th:src="@{/admin/js/echarts/dataTool.min.js}"></script>
+    <script type="text/javascript" th:src="@{/admin/js/echarts/china.js}"></script>
+    <script type="text/javascript" th:src="@{/admin/js/echarts/world.js}"></script>
+    <script type="text/javascript" th:src="@{/admin/js/echarts/bmap.min.js}"></script>
+    <script type="text/javascript" th:src="@{/admin/js/echarts/simplex.js}"></script>
+</head>
+
+<body>
+<div th:include="admin/index_top"></div>
+
+<div class="main-content" style="margin-bottom: 100px">
+    <!-- Infomation_header -->
+    <div class="breadcrumbs">
+        <ul class="breadcrumb">
+            <li>
+                <i class="icon-home home-icon"></i>
+                <a th:href="@{/admin/index}">首页</a>
+            </li>
+        </ul>
+    </div>
+    <!-- Infomation_main -->
+
+    <div id="container" style="height: 650px;"></div>
+
+    <!-- /Infomation_main -->
+</div>
+</div>
+</div>
+<!--footer-->
+<div class="footer_style" id="footerstyle">
+    <p class="l_f" th:text="${'版权所有&copy;'+company.compName +'&nbsp;&nbsp;&nbsp;&nbsp;'+company.batch}"></p>
+</div>
+<!--/footer-->
+
+<input type="hidden" th:value="${contextPath}" id="contextPath">
+<script type="text/javascript" th:inline="javascript">
+    var maxNum = [[${cityCount}]][0];
+    for(var i=1;i<34;i++){
+        if(maxNum<[[${cityCount}]][i]){
+            maxNum = [[${cityCount}]][i];
+        }
+    }
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    var app = {};
+    option = null;
+
+    option = {
+        title: {
+            text: '访问量',
+            subtext: '家具商城管理系统',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+
+        visualMap: {
+            min: 0,
+            max: maxNum,
+            left: 'left',
+            top: 'bottom',
+            text: ['高', '低'],           // 文本，默认为数值文本
+            calculable: true
+        },
+        toolbox: {
+            show: true,
+            orient: 'vertical',
+            left: 'right',
+            top: 'center',
+            feature: {
+                dataView: {readOnly: false},
+                restore: {},
+                saveAsImage: {}
+            }
+        },
+        series: [
+            {
+                name: '访问量',
+                type: 'map',
+                mapType: 'china',
+                roam: false,
+                label: {
+                    normal: {
+                        show: true
+                    },
+                    emphasis: {
+                        show: true
+                    }
+                },
+                data: [
+
+                    {name: '天津', value: [[${cityCount}]][0]},
+                    {name: '北京', value: [[${cityCount}]][1]},
+                    {name: '上海', value: [[${cityCount}]][2]},
+                    {name: '重庆', value: [[${cityCount}]][3]},
+                    {name: '河北', value: [[${cityCount}]][4]},
+                    {name: '河南', value: [[${cityCount}]][5]},
+                    {name: '云南', value: [[${cityCount}]][6]},
+                    {name: '辽宁', value: [[${cityCount}]][7]},
+                    {name: '黑龙江', value: [[${cityCount}]][8]},
+                    {name: '湖南', value: [[${cityCount}]][9]},
+                    {name: '安徽', value: [[${cityCount}]][10]},
+                    {name: '山东', value: [[${cityCount}]][11]},
+                    {name: '新疆', value: [[${cityCount}]][12]},
+                    {name: '江苏', value: [[${cityCount}]][13]},
+                    {name: '浙江', value: [[${cityCount}]][14]},
+                    {name: '江西', value: [[${cityCount}]][15]},
+                    {name: '湖北', value: [[${cityCount}]][16]},
+                    {name: '广西', value: [[${cityCount}]][17]},
+                    {name: '甘肃', value: [[${cityCount}]][18]},
+                    {name: '山西', value: [[${cityCount}]][19]},
+                    {name: '内蒙古', value: [[${cityCount}]][20]},
+                    {name: '陕西', value: [[${cityCount}]][21]},
+                    {name: '吉林', value: [[${cityCount}]][22]},
+                    {name: '福建', value: [[${cityCount}]][23]},
+                    {name: '贵州', value: [[${cityCount}]][24]},
+                    {name: '广东', value: [[${cityCount}]][25]},
+                    {name: '青海', value: [[${cityCount}]][26]},
+                    {name: '西藏', value: [[${cityCount}]][27]},
+                    {name: '四川', value: [[${cityCount}]][28]},
+                    {name: '宁夏', value: [[${cityCount}]][29]},
+                    {name: '海南', value: [[${cityCount}]][30]},
+                    {name: '台湾', value: [[${cityCount}]][31]},
+                    {name: '香港', value: [[${cityCount}]][32]},
+                    {name: '澳门', value: [[${cityCount}]][33]}
+                ]
+            }
+        ]
+    };
+    ;
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+</script>
+
+</body>
+</html>

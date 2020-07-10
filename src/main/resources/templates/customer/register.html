@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>注册</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/icon/my.ico}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <link th:href="@{/css/mycss.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link th:href="@{/css/megamenu.css}" rel="stylesheet" type="text/css" media="all"/>
+
+    <script th:src="@{/js/bootstrap.js}"></script>
+    <script th:src="@{/js/jquery-1.11.1.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/simpleCart.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/change.js}" type="text/javascript"></script>
+    <script th:src="@{/js/megamenu.js}" type="text/javascript"></script>
+    <script th:src="@{/js/responsiveslides.min.js}" type="text/javascript"></script>
+    <script type="application/x-javascript">
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1000);
+            });
+        });
+    </script>
+
+    <script>$(document).ready(function () {
+        $(".megamenu").megamenu();
+    });</script>
+</head>
+
+<body>
+<div th:include="customer/index_top"></div>
+<!-- reg-form -->
+<div class="reg-form">
+    <div class="container">
+        <div class="reg">
+            <h3>现在注册</h3>
+            <p>欢迎，请填写以下信息并点击注册，以此获得属于您的账户。</p>
+            <p>
+                如果您已经注册，请<a href="#" onclick="Loading()">点击此处</a>。
+            </p>
+            <form method="post">
+                <input type="hidden" id="userId" name="userId" value="">
+                <ul>
+                    <li>
+                        <input type="text" value="" placeholder="用户名（账号）" id="userName" name="userName"
+                               onblur="register_wrong(this,'UserRight','UserWrong','UserWrongText',null)">
+                        <img alt="" id="UserRight" th:src="@{/images/yes.png}" style="display: none;">
+                        <img alt="" id="UserWrong" th:src="@{/images/no.png}" style="display: none;"><br>
+                        <a style="font-size: 13px; color: red;" id="UserWrongText"></a>
+                    </li>
+                </ul>
+
+                <ul>
+                    <li>
+                        <input type="text" value="" placeholder="姓名（昵称）" id="callName" name="callName"
+                               onblur="register_wrong(this,'NameRight','NameWrong','NameWrongText',null)">
+                        <img alt="" id="NameRight" th:src="@{/images/yes.png}" style="display: none;">
+                        <img alt="" id="NameWrong" th:src="@{/images/no.png}" style="display: none;"><br>
+                        <a style="font-size: 13px; color: red;" id="NameWrongText"></a>
+                    </li>
+                </ul>
+                <ul>
+                    <li><input type="password" value="" placeholder="密码" id="passWord" name="passWord"
+                               onblur="register_wrong(this,'PasswordRight','PasswordWrong','PasswordWrongText',null)">
+                        <img alt="" id="PasswordRight" th:src="@{/images/yes.png}" style="display: none;">
+                        <img alt="" id="PasswordWrong" th:src="@{/images/no.png}" style="display: none;"><br>
+                        <a style="font-size: 13px; color: red;" id="PasswordWrongText"></a></li>
+                </ul>
+                <ul>
+                    <li>
+                        <input type="password" value="" placeholder="确认密码" id="rePassWord" name="rePassWord"
+                               onblur="register_wrong(this,'RePasswordRight','RePasswordWrong','RePasswordWrongText',null)">
+                        <img alt="" id="RePasswordRight" th:src="@{/images/yes.png}" style="display: none;">
+                        <img alt="" id="RePasswordWrong" th:src="@{/images/no.png}" style="display: none;"><br> <font
+                                style="font-size: 13px; color: red;" id="RePasswordWrongText"></font></li>
+                </ul>
+                <ul>
+                    <li><input type="text" value="" placeholder="手机号码" id="tel" name="tel"
+                               onblur="register_wrong(this,'TelRight','TelWrong','TelWrongText',null)">
+                        <img alt="" id="TelRight" th:src="@{/images/yes.png}" style="display: none;">
+                        <img alt="" id="TelWrong" th:src="@{/images/no.png}" style="display: none;"><br>
+                        <a style="font-size: 13px; color: red;" id="TelWrongText"></a></li>
+                </ul>
+                <ul>
+                    <li>
+                        <input type="text" value="" placeholder="邮箱" id="email" name="email"
+                               onblur="register_wrong(this,'EmailRight','EmailWrong','EmailWrongText',null)">
+                        <img alt="" id="EmailRight" th:src="@{/images/yes.png}" style="display: none;">
+                        <img alt="" id="EmailWrong" th:src="@{/images/no.png}" style="display: none;"><br>
+                        <a style="font-size: 13px; color: red;" id="EmailWrongText"></a>
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <input type="text" value="" placeholder="密保问题" id="question" name="question"
+                               onblur="register_wrong(this,'QuestionRight','QuestionWrong','QuestionWrongText',null)">
+                        <img alt="" id="QuestionRight" th:src="@{/images/yes.png}" style="display: none;">
+                        <img alt="" id="QuestionWrong" th:src="@{/images/no.png}" style="display: none;"><br>
+                        <a style="font-size: 13px; color: red;" id="QuestionWrongText"></a>
+                    </li>
+                </ul>
+
+                <ul>
+                    <li><input type="text" value="" placeholder="密保答案" id="answer" name="answer"
+                               onblur="register_wrong(this,'AnswerRight','AnswerWrong','AnswerWrongText',null)">
+                        <img alt="" id="AnswerRight" th:src="@{/images/yes.png}" style="display: none;">
+                        <img alt="" id="AnswerWrong" th:src="@{/images/no.png}" style="display: none;"><br>
+                        <a style="font-size: 13px; color: red;" id="AnswerWrongText"></a></li>
+                </ul>
+                <div class="col-md-6 login-right">
+                    <a href="#" class="button" onclick="UserRegister()">注册</a>
+                </div>
+<!--                <input type="submit" value="注册">-->
+            </form>
+        </div>
+    </div>
+</div>
+<div th:include="customer/footer"></div>
+<input type="hidden" th:value="${contextPath}" id="contextPath">
+</body>
+</html>

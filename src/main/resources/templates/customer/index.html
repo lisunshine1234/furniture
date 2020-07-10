@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>首页</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/icon/my.ico}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <link th:href="@{/css/mycss.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link th:href="@{/css/megamenu.css}" rel="stylesheet" type="text/css" media="all"/>
+
+    <script th:src="@{/js/bootstrap.js}"></script>
+    <script th:src="@{/js/jquery-1.11.1.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/simpleCart.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/change.js}" type="text/javascript"></script>
+    <script th:src="@{/js/megamenu.js}" type="text/javascript"></script>
+    <script th:src="@{/js/responsiveslides.min.js}" type="text/javascript"></script>
+    <script type="application/x-javascript">
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1000);
+            });
+        });
+    </script>
+
+    <script>$(document).ready(function () {
+        $(".megamenu").megamenu();
+    });</script>
+</head>
+
+<body>
+<div th:include="customer/index_top"></div>
+<!-- banner -->
+<div class="banner">
+    <div class="container">
+        <!-- Slider-starts-Here -->
+        <script>
+            $(function () {
+                $("#slider3").responsiveSlides(
+                    {
+                        auto: true,
+                        pager: false,
+                        nav: true,
+                        speed: 500,
+                        namespace: "callbacks",
+                        before: function () {
+                            $('.events').append(
+                                "<li>before event fired.</li>");
+                        },
+                        after: function () {
+                            $('.events').append(
+                                "<li>after event fired.</li>");
+                        }
+                    });
+
+            });
+        </script>
+        <!--//End-slider-script -->
+        <div id="top" class="callbacks_container">
+            <ul class="rslides" id="slider3" th:if="${News} != null">
+                <li th:each=" news : ${News}">
+                    <div class="banner-info">
+                        <div class="banner-info1"
+                             th:style="'background:url('+ @{${news.addressMiddle}} +' ) no-repeat 0px 0px;background-size: cover;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;-ms-background-size: cover;'">
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <ul class="rslides" id="slider3" th:if="${News} == null">
+                <li>
+                    <div class="banner-info">
+                        <div class="banner-info1"
+                             th:style="'background:url('+ @{/images/1.jpg} +' ) no-repeat 0px 0px;background-size: cover;-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;-ms-background-size: cover;'">
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</div>
+
+<br><br><br>
+
+<h3 align=center>个性推荐</h3>
+
+<div class="banner-bottom">
+    <div class="container">
+        <div class="col-xs-6 col-md-4 col-md-3 col-lg-2 product-left"
+             style="margin: 0;padding: 10px" th:each="productPerson:${PersonProductList}">
+            <div class="p-one simpleCart_shelfItem jwe">
+                <a th:href="@{'/productView?prodId='+${productPerson.id}}">
+                    <div style="width:100%;height:0;position: relative;padding-bottom: 100%">
+                        <img th:src="@{${productPerson.addressMini1 }}" style="object-fit:cover;top:0;left:0;width:100%;height:100%;position: absolute;" alt=""/>
+                    </div>
+                </a>
+                <div class="product-left-cart" style="height: 65px;width: 100%;text-align: left ">
+                    <div><span class=" item_price" th:utext="${'<b>编号:</b>&nbsp;'+productPerson.id}"> </span></div>
+                    <div><span class=" item_price" th:utext="${'<b>名称:</b>&nbsp;'+productPerson.prodName}"> </span></div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br><br><br>
+
+<h3 align=center>最新</h3>
+
+<div class="banner-bottom">
+    <div class="container">
+        <div class="col-xs-6 col-md-4 col-md-3 col-lg-2 product-left"
+             style="margin: 0;padding: 10px" th:each="product:${LastProductList}">
+            <div class="p-one simpleCart_shelfItem jwe">
+                <a th:href="@{'/productView?prodId='+${product.id}}">
+                    <div style="width:100%;height:0;position: relative;padding-bottom: 100%">
+                        <img th:src="@{${product.addressMini1 }}" style="object-fit:cover;top:0;left:0;width:100%;height:100%;position: absolute;" alt=""/>
+                    </div>
+                </a>
+                <div class="product-left-cart" style="height: 65px;width: 100%;text-align: left ">
+                    <div><span class=" item_price" th:utext="${'<b>编号:</b>&nbsp;'+product.id}"> </span></div>
+                    <div><span class=" item_price" th:utext="${'<b>名称:</b>&nbsp;'+product.prodName}"> </span></div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br><br><br>
+
+<h3 align=center>最热</h3>
+
+<div class="banner-bottom">
+    <div class="container">
+        <div class="col-xs-6 col-md-4 col-md-3 col-lg-2 product-left"
+             style="margin: 0;padding: 10px" th:each="productHot:${HotProductList}">
+            <div class="p-one simpleCart_shelfItem jwe">
+                <a th:href="@{'/productView?prodId='+${productHot.id}}">
+                    <div style="width:100%;height:0;position: relative;padding-bottom: 100%">
+                        <img th:src="@{${productHot.addressMini1 }}" style="object-fit:cover;top:0;left:0;width:100%;height:100%;position: absolute;" alt=""/>
+                    </div>
+                </a>
+                <div class="product-left-cart" style="height: 65px;width: 100%;text-align: left ">
+                    <div><span class=" item_price" th:utext="${'<b>编号:</b>&nbsp;'+productHot.id}"> </span></div>
+                    <div><span class=" item_price" th:utext="${'<b>名称:</b>&nbsp;'+productHot.prodName}"> </span></div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- //banner-bottom -->
+
+<input type="hidden" th:value="${contextPath}" id="contextPath">
+<div th:include="customer/footer"></div>
+
+</body>
+</html>

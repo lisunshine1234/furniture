@@ -1,0 +1,41 @@
+server:
+  port: 80
+  servlet:
+    context-path: ${CONTEXT_PATH:/furniture}
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://${MYSQL_URL:localhost:3306}/${DB_NAME:furniture}?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    username: ${MYSQL_LOGIN:root}
+    password: ${MYSQL_PASSWORD:123456}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    database: mysql
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+  resources:
+    static-locations: file:${LocalSavaUrl},classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public/
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 50MB
+  redis:
+    lettuce:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: -1ms
+        min-idle: 0
+    sentinel:
+      master: mymaster
+      nodes: ${REDIS_NODES:localhost:26379,localhost:26380,localhost:26381}
+logging:
+  level:
+    root: info
+
+ProductNumber: ${INDEX_CONUT:24}
+LocalSavaUrl: ${RESOURCE_PATH:/furniture/}

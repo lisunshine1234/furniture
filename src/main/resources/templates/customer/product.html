@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>家具列表</title>
+    <link rel="icon" type="image/x-icon" th:href="@{/icon/my.ico}" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <link th:href="@{/css/mycss.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/css/bootstrap.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css" media="all"/>
+    <link th:href="@{/css/megamenu.css}" rel="stylesheet" type="text/css" media="all"/>
+
+    <script th:src="@{/js/bootstrap.js}"></script>
+    <script th:src="@{/js/jquery-1.11.1.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/simpleCart.min.js}" type="text/javascript"></script>
+    <script th:src="@{/js/change.js}" type="text/javascript"></script>
+    <script th:src="@{/js/megamenu.js}" type="text/javascript"></script>
+    <script th:src="@{/js/responsiveslides.min.js}" type="text/javascript"></script>
+    <script type="application/x-javascript">
+        addEventListener("load", function () {
+            setTimeout(hideURLbar, 0);
+        }, false);
+
+        function hideURLbar() {
+            window.scrollTo(0, 1);
+        }
+    </script>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function ($) {
+            $(".scroll").click(function (event) {
+                event.preventDefault();
+                $('html,body').animate({scrollTop: $(this.hash).offset().top}, 1000);
+            });
+        });
+    </script>
+
+    <script>$(document).ready(function () {
+        $(".megamenu").megamenu();
+    });</script>
+</head>
+
+<body>
+<div th:include="customer/index_top"></div>
+<!-- products -->
+<div class="products">
+    <div class="container" style="width: 100%;">
+        <div class=" " id="cate_child" style="padding:10px">
+            <section class="sky-form">
+                <div class="row1 ">
+                    <div class="col col-4">
+                        <label class="checkbox" style="margin:0px 25px 0px 0px;">
+                            <input type="checkbox" name="CHILD_ID" id="CHILD_ID"
+                                   onclick="is_check()"><i></i>查看所有</label>
+
+                        <label class="checkbox" style="margin:0px 25px 0px 0px;"
+                               th:each="navigationChild : ${navigationChildList}">
+                            <input type="checkbox" name="CHILD_ID" id="CHILD_ID"
+                                   th:value="${navigationChild.id }"
+                                   th:onclick="'is_check('+${navigationChild.id }+')'">
+                            <i></i><a th:text="${navigationChild.naviName }"></a>
+                        </label>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="products-grids">
+            <div class="products-grid-lft" id="DisplayProduct">
+                <div class="col-xs-6 col-md-4 col-md-3 col-lg-2 product-left" th:if="product != null"
+                     style="margin: 0;padding: 10px" th:each="product:${productList}">
+                    <div class="p-one simpleCart_shelfItem jwe">
+                        <a th:href="@{'/productView?prodId='+${product.id}}">
+                            <div style="width:100%;height:0;position: relative;padding-bottom: 100%">
+                                <img th:src="@{${product.addressMini1 }}" style="object-fit:cover;top:0;left:0;width:100%;height:100%;position: absolute;" alt=""/>
+                            </div>
+                        </a>
+                        <div class="product-left-cart" style="height: 65px;width: 100%;text-align: left ">
+                            <div><span class=" item_price" th:utext="${'<b>编号:</b>&nbsp;'+product.id}"> </span></div>
+                            <div><span class=" item_price" th:utext="${'<b>名称:</b>&nbsp;'+product.prodName}"> </span></div>
+                            <div class="clearfix"></div>
+                        </div>
+                    </div>
+                </div>
+                <div th:if="productList == null">暂无家具信息！</div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div style="padding: 10px 0; margin: 20px 0"></div>
+<!-- //products -->
+<input type="hidden" id="FATHER_ID" name="FATHER_ID" th:value="${fatherId}">
+<div th:include="customer/footer"></div>
+<input type="hidden" th:value="${contextPath}" id="contextPath">
+</body>
+</html>
